@@ -82,35 +82,39 @@ app.post('/sls/stats', (req, res) => {
 		...
 	] */
 
-	const {query} = req;
-	const {role, pub_domain_app, stream_name, url, remote_ip, remote_port, start_time, kbitrate} = query;
+	const body = req.body;
 
-	if (role === 'publisher') {
-		console.log('stats', req.body);
-		const streamKey = url.split('?')[0];
-		const streamer = streamKey.split('/')[1];
-		stats.set(streamer, {
-			port,
-			streamer,
-			pub_domain_app,
-			stream_name: stream_name,
-			url,
-			remote_ip,
-			remote_port,
-			start_time,
-			kbitrate
-		})
-		console.log(`stats posted to ${streamer}`);
-	}
+	body.forEach(object => {
+		const {role, pub_domain_app, stream_name, url, remote_ip, remote_port, start_time, kbitrate} = object;
 
+		if (role === 'publisher') {
+			// get streamKey from url in format ?srtauth=<streamkey>
+			const [streamer, p] = url?.split('?');
+			const params = new URLSearchParams(p);
+		
+			const streamKey = params.get('srtauth');
+		
+			stats.set(streamer, {
+				port,
+				streamer,
+				pub_domain_app,
+				stream_name,
+				url,
+				remote_ip,
+				remote_port,
+				start_time,
+				kbitrate
+			})
+			console.log(`stats posted to ${streamer}`);
+		}
+	});
 	res.sendStatus(200);
 });
 
 app.get('/sls/stats', (req, res) => {
 	// URL: /sls/stats?streamer=<streamer>&key=<key>
 	const {query} = req;
-	const {key} = query;
-	const streamer = req.query.streamer;
+	const {streamer, key} = query;
 	const auth = authConfig.get(streamer);
 	if (auth === key && streamer) {
 		const stream = stats.get(streamer);
