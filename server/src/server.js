@@ -33,9 +33,14 @@ app.post('/sls/event', (req, res) => {
 	const {role_name, srt_url, remote_ip, remote_port} = query;
 	const srtUrl = srt_url.split('/');
 	const [, , streamName] = srtUrl;
+	if(!streamName) {
+		res.status(400).send('Invalid stream name');
+		return;
+	}
 	// get streamKey from streamName in format ?srtauth=<streamkey>
 	const params = new URLSearchParams(streamName);
-	const streamer = streamName.split('?')[0];
+
+	const streamer = streamName?.split('?')[0];
 	const streamKey = params.get('srtauth');
 
 	if (query.on_event === 'on_connect') {
