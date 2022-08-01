@@ -1,0 +1,12 @@
+version: '3.3'
+services:
+    belabox-receiver:
+        container_name: belabox-receiver
+        ports:
+            - '5000:5000/udp'
+            - '8181:8181'
+            - '8282:8282/udp'
+            - '3000:3000'
+        volumes:
+            - './config.json:/app/config.json'
+        image: belabox-receiver

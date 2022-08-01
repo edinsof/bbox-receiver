@@ -1,43 +1,30 @@
-FROM debian:bullseye-backports AS builder
+FROM alpine:3.15 as builder
 
-ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-ENV DEBIAN_FRONTEND=noninteractive
+RUN apk update &&\
+    apk upgrade &&\ 
+    apk add --no-cache linux-headers alpine-sdk cmake tcl openssl-dev zlib-dev
 
-RUN set -xe; \
-    apt-get update; \
-    apt-get -y upgrade; \
-    apt-get install -y \
-    build-essential \
-    ca-certificates \
-    cmake \
-    git \
-    libssl-dev \
-    libz-dev \
-    tcl \
-    ;
+WORKDIR /tmp
 
 # belabox patched srt
 #
 ARG BELABOX_SRT_VERSION=master
-RUN set -xe; \
-    mkdir -p /build; \
+RUN mkdir -p /build; \
     git clone https://github.com/BELABOX/srt.git /build/srt; \
     cd /build/srt; \
     git checkout $BELABOX_SRT_VERSION; \
-    ./configure --prefix=/usr/local; \
-    make -j4; \
-    make install; \
-    ldconfig;
+    ./configure; \
+    make -j${nproc}; \
+    make install;
 
 # belabox srtla
 #
 ARG SRTLA_VERSION=main
-RUN set -xe; \
-    mkdir -p /build; \
+RUN mkdir -p /build; \
     git clone https://github.com/BELABOX/srtla.git /build/srtla; \
     cd /build/srtla; \
     git checkout $SRTLA_VERSION; \
-    make -j4;
+    make -j${nproc};
 
 RUN cp /build/srtla/srtla_rec /build/srtla/srtla_send /usr/local/bin
 
@@ -48,56 +35,42 @@ RUN cp /build/srtla/srtla_rec /build/srtla/srtla_send /usr/local/bin
 # - upstream patch for logging on arm
 COPY patches/sls-SRTLA.patch \
     patches/sls-version.patch \
+    patches/segv.patch \
     patches/480f73dd17320666944d3864863382ba63694046.patch /tmp/
 
+ENV LD_LIBRARY_PATH /lib:/usr/lib:/usr/local/lib64
 ARG SRT_LIVE_SERVER_VERSION=master
 RUN set -xe; \
     mkdir -p /build; \
-    git clone https://github.com/IRLDeck/srt-live-server.git /build/srt-live-server; \
+    git clone https://github.com/IRLServer/srt-live-server.git /build/srt-live-server; \
     cd /build/srt-live-server; \
     git checkout $SRT_LIVE_SERVER_VERSION; \
     patch -p1 < /tmp/sls-SRTLA.patch; \
+    patch -p1 < /tmp/segv.patch; \
     patch -p1 < /tmp/480f73dd17320666944d3864863382ba63694046.patch; \
-    LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH make -j4; \
+    make -j${nproc}; \
     cp bin/* /usr/local/bin;
 
 
-# runtime container with NOALBS
+# runtime container with server
 #
-FROM debian:bullseye-backports
-
-RUN set -xe; \
-    apt-get update; \
-    apt-get -y upgrade; \
-    apt-get install -y --no-install-recommends \
-    ca-certificates \
-    git \
-    lsof \
-    nodejs \
-    npm \
-    procps \
-    supervisor \
-    ;
+FROM node:alpine3.15
+ENV LD_LIBRARY_PATH /lib:/usr/lib:/usr/local/lib64
+RUN apk add --update --no-cache openssl libstdc++ supervisor perl
 
 COPY --from=builder /usr/local/lib /usr/local/lib
 COPY --from=builder /usr/local/include /usr/local/include
 COPY --from=builder /usr/local/bin /usr/local/bin
 
 COPY files/sls.conf /etc/sls/sls.conf
-COPY files/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY files/supervisord.conf /etc/supervisord.conf
 COPY files/logprefix /usr/local/bin/logprefix
+COPY server/ /app
 
-RUN set -xe; \
-    ldconfig; \
-    chmod 755 /usr/local/bin/logprefix;
+RUN chmod 755 /usr/local/bin/logprefix;
 
-ARG NOALBS_VERSION=v1.9.5
-RUN set -xe; \
-    git clone https://github.com/715209/nginx-obs-automatic-low-bitrate-switching /app; \
-    cd /app; \
-    git checkout $NOALBS_VERSION; \
-    npm install fast-fuzzy node-fetch node-media-server obs-websocket-js signale string-template ws xml2js;
+WORKDIR /app
+RUN yarn --frozen-lockfile --production
 
-EXPOSE 5000/udp 8181/tcp 8282/udp
-
-CMD ["/usr/bin/supervisord"]
+EXPOSE 5000/udp 8181/tcp 8282/udp 3000/tcp
+ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]

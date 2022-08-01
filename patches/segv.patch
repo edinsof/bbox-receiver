@@ -1,0 +1,16 @@
+diff --git a/slscore/conf.cpp b/slscore/conf.cpp
+index 980d180..cf38e2e 100644
+--- a/slscore/conf.cpp
++++ b/slscore/conf.cpp
+@@ -357,6 +357,11 @@ int sls_conf_open(const char * conf_file)
+ void sls_conf_release(sls_conf_base_t * c)
+ {
+     sls_conf_base_t * c_b;
++
++    if (c == NULL) {
++       return ;
++    }
++
+     if (c->child != NULL) {
+         c_b = c->child;
+         sls_conf_release(c_b);
