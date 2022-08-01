@@ -28,7 +28,7 @@ app.post('/sls/event', (req, res) => {
 			remote_port: '57374'
 		}
 	*/
-	console.log('event', req.body);
+	console.log('event', req.query);
 	const {query} = req;
 	const {role_name, srt_url, remote_ip, remote_port} = query;
 	const srtUrl = srt_url.split('/');
@@ -38,9 +38,9 @@ app.post('/sls/event', (req, res) => {
 		return;
 	}
 	// get streamKey from streamName in format ?srtauth=<streamkey>
-	const params = new URLSearchParams(streamName);
+	const [streamer, p] = streamName?.split('?');
+	const params = new URLSearchParams(p);
 
-	const streamer = streamName?.split('?')[0];
 	const streamKey = params.get('srtauth');
 
 	if (query.on_event === 'on_connect') {
@@ -49,9 +49,11 @@ app.post('/sls/event', (req, res) => {
 			if (auth === streamKey) {
 				console.log(`${role_name} connected to ${streamer}`);
 				res.sendStatus(200);
+				return;
 			} else {
 				console.log(`${role_name} connected to ${streamer} with wrong key`);
 				res.sendStatus(401);
+				return;
 			}
 		}
 	} else if (query.on_event === 'on_close') {
