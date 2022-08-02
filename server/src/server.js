@@ -89,7 +89,7 @@ app.get('/stats', async (req, res) => {
 	const {streamer, key} = query;
 	const auth = authConfig.get(streamer);
 	const authed = auth === key && streamer && key;
-	const result = [];
+	let result = [];
 	if (authed) {
 		try {
 			// get data from stats page at localhost:8181/stats
@@ -99,9 +99,12 @@ app.get('/stats', async (req, res) => {
 			const publisherName = `live/stream/${streamer}?srtauth=${auth}`;
 			if(publishers && publishers.hasOwnProperty(publisherName)) {
 				const publisher = publishers[publisherName];
-				result[publisherName] = publisher;
+				result = {
+					...result,
+					[publisherName]: publisher
+				};
 			}
-		}catch(e) {
+		} catch(e) {
 			console.log(e);
 		}
 	}
