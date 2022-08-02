@@ -11,12 +11,11 @@ const config = JSON.parse(
 );
 
 const authConfig = new Map();
-console.log('hei');
+
 config?.auth?.forEach(object => {
 	authConfig.set(object.user, object.key);
 });
 
-const stats = new Map();
 
 app.post('/sls/event', (req, res) => {
 	/*
@@ -58,7 +57,6 @@ app.post('/sls/event', (req, res) => {
 		}
 	} else if (query.on_event === 'on_close') {
 		console.log(`${role_name} disconnected from ${streamer}`);
-		stats.delete(streamer);
 		res.sendStatus(200);
 	} else {
 		console.log(`${role_name} connected to ${streamer} with wrong event`);
@@ -82,47 +80,37 @@ app.post('/sls/stats', (req, res) => {
 		...
 	] */
 
-	const body = req.body;
-
-	body.forEach(object => {
-		const {role, pub_domain_app, stream_name, url, remote_ip, remote_port, start_time, kbitrate} = object;
-
-		if (role === 'publisher') {
-			// get streamKey from url in format ?srtauth=<streamkey>
-			const [streamer, p] = url?.split('?');
-			const params = new URLSearchParams(p);
-		
-			const streamKey = params.get('srtauth');
-		
-			stats.set(streamer, {
-				port,
-				streamer,
-				pub_domain_app,
-				stream_name,
-				url,
-				remote_ip,
-				remote_port,
-				start_time,
-				kbitrate
-			})
-			console.log(`stats posted to ${streamer}`);
-		}
-	});
 	res.sendStatus(200);
 });
 
-app.get('/sls/stats', (req, res) => {
+app.get('/sls/stats', async (req, res) => {
 	// URL: /sls/stats?streamer=<streamer>&key=<key>
 	const {query} = req;
 	const {streamer, key} = query;
 	const auth = authConfig.get(streamer);
-	if (auth === key && streamer) {
-		const stream = stats.get(streamer);
-		res.json(stream);
-	} else {
-		res.status(401);
-		res.send('can\'t list stats without auth');
+	const authed = auth === key && streamer && key;
+	const result = [];
+	if (authed) {
+		res.sendStatus(200);
+		// get data from stats page at localhost:8181/stats
+		const data = await fetch('http://localhost:8181/stats');
+		const json = await data.json();
+		const result = [];
+		const {publishers} = json;
+		publishers.forEach((publisher, publisherName) => {
+			if(publisherName === `live/stream/${streamer}?srtauth=${auth}`) {
+				result.push(publisher);
+			}
+		}
+		);
 	}
+	res.json({
+		publishers: result,
+		status: authed ? 'ok' : 'error'
+	});
 });
+
+
+
 
 app.listen(3000, () => console.log('Server started'))
