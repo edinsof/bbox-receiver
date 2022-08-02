@@ -91,20 +91,21 @@ app.get('/stats', async (req, res) => {
 	const authed = auth === key && streamer && key;
 	const result = [];
 	if (authed) {
-		res.sendStatus(200);
-		// get data from stats page at localhost:8181/stats
-		const data = await fetch('http://localhost:8181/stats');
-		const json = await data.json();
-		const result = [];
-		const {publishers} = json;
-		publishers.forEach((publisher, publisherName) => {
-			if(publisherName === `live/stream/${streamer}?srtauth=${auth}`) {
-				result.push(publisher);
+		try {
+			// get data from stats page at localhost:8181/stats
+			const data = await fetch('http://localhost:8181/stats');
+			const json = await data.json();
+			const {publishers} = json;
+			const publisherName = `live/stream/${streamer}?srtauth=${auth}`;
+			if(publishers && publishers.hasOwnProperty(publisherName)) {
+				const publisher = publishers[publisherName];
+				result[publisherName] = publisher;
 			}
+		}catch(e) {
+			console.log(e);
 		}
-		);
 	}
-	res.json({
+	res.status(200).json({
 		publishers: result,
 		status: authed ? 'ok' : 'error'
 	});
