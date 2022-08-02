@@ -83,7 +83,7 @@ app.post('/sls/stats', (req, res) => {
 	res.sendStatus(200);
 });
 
-app.get('/sls/stats', async (req, res) => {
+app.get('/stats', async (req, res) => {
 	// URL: /sls/stats?streamer=<streamer>&key=<key>
 	const {query} = req;
 	const {streamer, key} = query;
