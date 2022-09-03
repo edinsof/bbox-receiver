@@ -1,6 +1,6 @@
 # belabox-receiver
 
-A reverse engineered and enhanced Dockerfile for datagutt/belabox-receiver. Has support for multiple stream swith per-stream authentication.
+A reverse engineered and enhanced Dockerfile for datagutt/belabox-receiver. Has support for multiple streams with per-stream authentication.
 
 Work in progress. A few streamers i know are personally using this image for their Twitch streams but I can't guarantee anything.
 
