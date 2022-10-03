@@ -36,7 +36,7 @@ RUN set -xe; \
     cd /build/srt-live-server; \
     git checkout $SRT_LIVE_SERVER_VERSION; \
     git submodule update --init; \
-    cmake ../ -DCMAKE_BUILD_TYPE=Release; \
+    cmake . -DCMAKE_BUILD_TYPE=Release; \
     make -j${nproc}; \
     cp bin/* /usr/local/bin;
 
