@@ -9,7 +9,7 @@ Work in progress. A few streamers i know are personally using this image for the
 ## Manual
 srtla_rec from https://github.com/BELABOX
 srt-live-transmit from https://github.com/BELABOX
-srt-live-server from https://gitlab.com/IRLServer/srt-live-server
+irl-srt-server (srt-live-server fork) from https://gitlab.com/IRLServer/irl-srt-server
 It requires the following ports to be published:
 
 5000:5000/udp
