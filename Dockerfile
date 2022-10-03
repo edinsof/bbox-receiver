@@ -35,9 +35,7 @@ RUN set -xe; \
     git clone https://github.com/IRLServer/irl-srt-server.git /build/srt-live-server; \
     cd /build/srt-live-server; \
     git checkout $SRT_LIVE_SERVER_VERSION; \
-    mkdir build \
-    cd build \
-    cmake ../ -DCMAKE_BUILD_TYPE=Release \
+    cmake . -DCMAKE_BUILD_TYPE=Release; \
     make -j${nproc}; \
     cp bin/* /usr/local/bin;
 
