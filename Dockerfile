@@ -55,11 +55,13 @@ COPY files/sls.conf /etc/sls/sls.conf
 COPY files/supervisord.conf /etc/supervisord.conf
 COPY files/logprefix /usr/local/bin/logprefix
 COPY server/ /app
+COPY entrypoint.sh /entrypoint.sh
 
+RUN chmod +x /entrypoint.sh
 RUN chmod 755 /usr/local/bin/logprefix;
 
 WORKDIR /app
 RUN yarn --frozen-lockfile --production
 
 EXPOSE 5000/udp 8181/tcp 8282/udp 3000/tcp
-ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]
+ENTRYPOINT ["/entrypoint.sh"]
