@@ -45,7 +45,7 @@ RUN set -xe; \
 #
 FROM node:alpine3.15
 ENV LD_LIBRARY_PATH /lib:/usr/lib:/usr/local/lib64
-RUN apk add --update --no-cache openssl libstdc++ supervisor perl
+RUN apk add --update --no-cache openssl libstdc++ supervisor perl coreutils
 
 COPY --from=builder /usr/local/lib /usr/local/lib
 COPY --from=builder /usr/local/include /usr/local/include
