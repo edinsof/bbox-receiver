@@ -1,4 +1,4 @@
-FROM alpine:3.18 as builder
+FROM alpine:3.19 as builder
 
 RUN apk update &&\
     apk upgrade &&\ 
@@ -43,7 +43,7 @@ RUN set -xe; \
 
 # runtime container with server
 #
-FROM node:alpine3.18
+FROM node:alpine3.19
 ENV LD_LIBRARY_PATH /lib:/usr/lib:/usr/local/lib64
 RUN apk add --update --no-cache openssl libstdc++ supervisor perl coreutils
 
