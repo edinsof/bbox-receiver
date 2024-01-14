@@ -6,10 +6,12 @@ Work in progress. A few streamers i know are personally using this image for the
 
 **WARNING: This is not an official Belabox project. Please don't spam rationalirl about it!**
 
+We using the following great open-source projects:
+- srtla_rec from https://github.com/BELABOX
+- srt-live-transmit from https://github.com/BELABOX
+- irl-srt-server (srt-live-server fork) from https://github.com/IRLServer/irl-srt-server
+
 ## Manual
-srtla_rec from https://github.com/BELABOX
-srt-live-transmit from https://github.com/BELABOX
-irl-srt-server (srt-live-server fork) from https://gitlab.com/IRLServer/irl-srt-server
 It requires the following ports to be published:
 
 5000:5000/udp
