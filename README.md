@@ -26,5 +26,7 @@ Within Belabox, set "live/stream/belabox?srtauth=belabox" as SRT streamid.
 
 To retrieve the SRT-Stream (via OBS, VLC etc.), open the following URL:
 srt://your-public-container-ip:8282/?streamid=play/stream/belabox?srtauth=belabox
+
 Private Statistics-URL (will leak all live stream keys): http://your-public-container-ip:8181/stats
+
 Public Statistics-URL (preferreable): http://your-public-container-ip:8181/stats?streamer=belabox&key=belabox
