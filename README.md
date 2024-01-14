@@ -29,4 +29,4 @@ srt://your-public-container-ip:8282/?streamid=play/stream/belabox?srtauth=belabo
 
 Private Statistics-URL (will leak all live stream keys): http://your-public-container-ip:8181/stats
 
-Public Statistics-URL (preferreable): http://your-public-container-ip:8181/stats?streamer=belabox&key=belabox
+Public Statistics-URL (preferreable): http://your-public-container-ip:3000/stats?streamer=belabox&key=belabox
