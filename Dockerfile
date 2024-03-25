@@ -21,7 +21,7 @@ RUN mkdir -p /build; \
 #
 ARG SRTLA_VERSION=main
 RUN mkdir -p /build; \
-    git clone https://github.com/BELABOX/srtla.git /build/srtla; \
+    git clone https://github.com/IRLServer/srtla.git /build/srtla; \
     cd /build/srtla; \
     git checkout $SRTLA_VERSION; \
     make -j${nproc};
