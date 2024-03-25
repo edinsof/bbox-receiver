@@ -1,3 +1,4 @@
+# alpine 3.18 is required unless we upgrade spdlog in irl-srt-server
 FROM alpine:3.18 as builder
 
 RUN apk update &&\
@@ -17,7 +18,7 @@ RUN mkdir -p /build; \
     make -j${nproc}; \
     make install;
 
-# belabox srtla
+# belabox patched srtla
 #
 ARG SRTLA_VERSION=main
 RUN mkdir -p /build; \
@@ -27,9 +28,12 @@ RUN mkdir -p /build; \
     make -j${nproc};
 
 RUN cp /build/srtla/srtla_rec /build/srtla/srtla_send /usr/local/bin
+# I honestly don't know why this is needed after rebasing with mainstream SRT
+RUN cp /build/srt/srtcore/srt_compat.h /usr/local/include/srt/
 
 ENV LD_LIBRARY_PATH /lib:/usr/lib:/usr/local/lib64
 ARG SRT_LIVE_SERVER_VERSION=master
+# use custom irl srt server from irlserver
 RUN set -xe; \
     mkdir -p /build; \
     git clone https://github.com/IRLServer/irl-srt-server.git /build/srt-live-server; \
