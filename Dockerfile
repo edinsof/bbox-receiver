@@ -26,7 +26,7 @@ RUN mkdir -p /build; \
     cd /build/srtla; \
     git checkout $SRTLA_VERSION; \
     git submodule init && git submodule update --recursive; \
-    cmake . \
+    cmake .; \
     make -j${nproc};
 
 RUN cp /build/srtla/irltk_srtla_rec /usr/local/bin/srtla_rec
