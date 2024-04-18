@@ -3,7 +3,7 @@ FROM alpine:3.18 as builder
 
 RUN apk update &&\
     apk upgrade &&\ 
-    apk add --no-cache linux-headers alpine-sdk cmake tcl openssl-dev zlib-dev spdlog spdlog-dev
+    apk add --no-cache linux-headers alpine-sdk cmake tcl openssl-dev zlib-dev spdlog spdlog-dev cmake
 
 WORKDIR /tmp
 
@@ -25,6 +25,8 @@ RUN mkdir -p /build; \
     git clone https://github.com/IRLToolkit/srtla.git /build/srtla; \
     cd /build/srtla; \
     git checkout $SRTLA_VERSION; \
+    git submodule init && git submodule update --recursive; \
+    cmake . \
     make -j${nproc};
 
 RUN cp /build/srtla/irltk_srtla_rec /usr/local/bin/srtla_rec
