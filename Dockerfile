@@ -3,7 +3,7 @@ FROM alpine:3.18 as builder
 
 RUN apk update &&\
     apk upgrade &&\ 
-    apk add --no-cache linux-headers alpine-sdk cmake tcl openssl-dev zlib-dev
+    apk add --no-cache linux-headers alpine-sdk cmake tcl openssl-dev zlib-dev spdlog spdlog-dev
 
 WORKDIR /tmp
 
@@ -20,14 +20,14 @@ RUN mkdir -p /build; \
 
 # belabox patched srtla
 #
-ARG SRTLA_VERSION=main
+ARG SRTLA_VERSION=irltk-fork
 RUN mkdir -p /build; \
-    git clone https://github.com/IRLServer/srtla.git /build/srtla; \
+    git clone https://github.com/IRLToolkit/srtla.git /build/srtla; \
     cd /build/srtla; \
     git checkout $SRTLA_VERSION; \
     make -j${nproc};
 
-RUN cp /build/srtla/srtla_rec /build/srtla/srtla_send /usr/local/bin
+RUN cp /build/srtla/irltk_srtla_rec /usr/local/bin/srtla_rec
 # I honestly don't know why this is needed after rebasing with mainstream SRT
 RUN cp /build/srt/srtcore/srt_compat.h /usr/local/include/srt/
 
