@@ -22,7 +22,7 @@ RUN mkdir -p /build; \
 #
 ARG SRTLA_VERSION=irltk-fork
 RUN mkdir -p /build; \
-    git clone https://github.com/IRLToolkit/srtla.git /build/srtla; \
+    git clone https://github.com/IRLServer/srtla.git /build/srtla; \
     cd /build/srtla; \
     git checkout $SRTLA_VERSION; \
     git submodule init && git submodule update --recursive; \

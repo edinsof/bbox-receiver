@@ -7,7 +7,8 @@ Work in progress. A few streamers i know are personally using this image for the
 **WARNING: This is not an official Belabox project. Please don't spam rationalirl about it!**
 
 We using the following great open-source projects:
-- srtla_rec from https://github.com/IRLToolkit/srtla/tree/irltk-fork
+- srt-new from https://github.com/IRLServer/srt-new
+- srtla_rec from https://github.com/IRLServer/srtla/tree/irltk-fork
 - irl-srt-server (srt-live-server fork) from https://github.com/IRLServer/irl-srt-server
 
 ## Manual
