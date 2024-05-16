@@ -1,4 +1,3 @@
-version: '3.3'
 services:
     belabox-receiver:
         container_name: belabox-receiver
