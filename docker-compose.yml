@@ -8,4 +8,4 @@ services:
             - '3000:3000'
         volumes:
             - './config.json:/app/config.json'
-        image: belabox-receiver
+        image: datagutt/belabox-receiver
