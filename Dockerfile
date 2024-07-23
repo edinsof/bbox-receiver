@@ -1,6 +1,4 @@
-# alpine 3.18 is required unless we upgrade spdlog in irl-srt-server
-FROM alpine:3.18 as builder
-
+FROM alpine:3.20 as builder
 RUN apk update &&\
     apk upgrade &&\ 
     apk add --no-cache linux-headers alpine-sdk cmake tcl openssl-dev zlib-dev spdlog spdlog-dev cmake
@@ -49,7 +47,7 @@ RUN set -xe; \
 
 # runtime container with server
 #
-FROM node:alpine3.18
+FROM node:alpine3.20
 ENV LD_LIBRARY_PATH /lib:/usr/lib:/usr/local/lib64
 RUN apk add --update --no-cache openssl libstdc++ supervisor perl coreutils spdlog spdlog-dev
 
