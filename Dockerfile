@@ -1,4 +1,4 @@
-FROM alpine:3.20 as builder
+FROM alpine:3.20 AS builder
 RUN apk update &&\
     apk upgrade &&\ 
     apk add --no-cache linux-headers alpine-sdk cmake tcl openssl-dev zlib-dev spdlog spdlog-dev cmake
@@ -31,7 +31,7 @@ RUN cp /build/srtla/irltk_srtla_rec /usr/local/bin/srtla_rec
 # I honestly don't know why this is needed after rebasing with mainstream SRT
 RUN cp /build/srt/srtcore/srt_compat.h /usr/local/include/srt/
 
-ENV LD_LIBRARY_PATH /lib:/usr/lib:/usr/local/lib64
+ENV LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib64
 ARG SRT_LIVE_SERVER_VERSION=master
 # use custom irl srt server from irlserver
 RUN set -xe; \
@@ -48,7 +48,7 @@ RUN set -xe; \
 # runtime container with server
 #
 FROM node:alpine3.20
-ENV LD_LIBRARY_PATH /lib:/usr/lib:/usr/local/lib64
+ENV LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib64
 RUN apk add --update --no-cache openssl libstdc++ supervisor perl coreutils spdlog spdlog-dev
 
 COPY --from=builder /usr/local/lib /usr/local/lib
