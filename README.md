@@ -29,7 +29,7 @@ Create a config.json file containing:
     }
   ]
 }
-``
+```
 
 Modify everything in bold below, then start with:
 
@@ -41,6 +41,6 @@ Within Belabox, set "live/stream/belabox?srtauth=belabox" as SRT streamid.
 To retrieve the SRT-Stream (via OBS, VLC etc.), open the following URL:
 srt://your-public-container-ip:8282/?streamid=play/stream/belabox?srtauth=belabox
 
-Statistics-URL: http://your-public-container-ip:8181/stats?publisher=live/stream/belabox?srtauth=belabox
+Statistics-URL: http://your-public-container-ip:8181/stats?publisher=live%2Fstream%2Fbelabox%3Fsrtauth%3Dbelabox
 
 Legacy Statistics-URL: http://your-public-container-ip:3000/stats?streamer=belabox&key=belabox
