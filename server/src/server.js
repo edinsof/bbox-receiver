@@ -80,7 +80,7 @@ app.get("/stats", async (req, res) => {
         )}`
       );
       const json = await data.json();
-      result = json;
+      result = json?.publishers;
     } catch (e) {
       console.log(e);
     }
