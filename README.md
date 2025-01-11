@@ -8,7 +8,7 @@ Work in progress. A few streamers i know are personally using this image for the
 
 We using the following great open-source projects:
 - srt from https://github.com/IRLServer/srt
-- srtla_rec from https://github.com/IRLServer/srtla/tree/irltk-fork
+- srtla_rec from https://github.com/IRLServer/srtla
 - irl-srt-server (srt-live-server fork) from https://github.com/IRLServer/irl-srt-server
 
 ## Manual
