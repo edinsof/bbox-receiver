@@ -18,7 +18,7 @@ RUN mkdir -p /build; \
 
 # belabox patched srtla
 #
-ARG SRTLA_VERSION=irltk-fork
+ARG SRTLA_VERSION=main
 RUN mkdir -p /build; \
     git clone https://github.com/IRLServer/srtla.git /build/srtla; \
     cd /build/srtla; \
@@ -27,7 +27,7 @@ RUN mkdir -p /build; \
     cmake .; \
     make -j${nproc};
 
-RUN cp /build/srtla/irltk_srtla_rec /usr/local/bin/srtla_rec
+RUN cp /build/srtla/srtla_rec /usr/local/bin/srtla_rec
 # I honestly don't know why this is needed after rebasing with mainstream SRT
 RUN cp /build/srt/srtcore/srt_compat.h /usr/local/include/srt/
 
