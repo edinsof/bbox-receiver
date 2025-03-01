@@ -84,10 +84,13 @@ app.get("/stats", async (req, res) => {
     } catch (e) {
       console.log(e);
     }
+   return res.status(200).json({
+     publishers: result,
+     status: "ok"
+   });
   }
-  res.status(200).json({
-    publishers: result,
-    status: authed ? "ok" : "error",
+  return res.status(200).json({
+    status: "error",
   });
 });
 
