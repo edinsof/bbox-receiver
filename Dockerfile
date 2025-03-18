@@ -7,13 +7,12 @@ WORKDIR /tmp
 
 # belabox patched srt
 #
-ARG BELABOX_SRT_VERSION=feat/add-audio-gap
+ARG BELABOX_SRT_VERSION=belabox
 RUN mkdir -p /build; \
     git clone https://github.com/IRLServer/srt.git /build/srt; \
     cd /build/srt; \
     git checkout $BELABOX_SRT_VERSION; \
-    ./configure \
-    --enable-debug=2; \
+    ./configure; \
     make -j${nproc}; \
     make install;
 
@@ -41,7 +40,7 @@ RUN set -xe; \
     cd /build/srt-live-server; \
     git checkout $SRT_LIVE_SERVER_VERSION; \
     git submodule update --init; \
-    cmake . -DCMAKE_BUILD_TYPE=Debug; \
+    cmake . -DCMAKE_BUILD_TYPE=Release; \
     make -j${nproc}; \
     cp bin/* /usr/local/bin;
 
