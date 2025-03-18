@@ -7,12 +7,13 @@ WORKDIR /tmp
 
 # belabox patched srt
 #
-ARG BELABOX_SRT_VERSION=belabox
+ARG BELABOX_SRT_VERSION=feat/audio-fix
 RUN mkdir -p /build; \
     git clone https://github.com/IRLServer/srt.git /build/srt; \
     cd /build/srt; \
     git checkout $BELABOX_SRT_VERSION; \
-    ./configure; \
+    ./configure \
+    --enable-debug=2; \
     make -j${nproc}; \
     make install;
 
@@ -40,7 +41,7 @@ RUN set -xe; \
     cd /build/srt-live-server; \
     git checkout $SRT_LIVE_SERVER_VERSION; \
     git submodule update --init; \
-    cmake . -DCMAKE_BUILD_TYPE=Release; \
+    cmake . -DCMAKE_BUILD_TYPE=Debug; \
     make -j${nproc}; \
     cp bin/* /usr/local/bin;
 
