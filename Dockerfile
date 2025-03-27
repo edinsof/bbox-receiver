@@ -7,7 +7,7 @@ WORKDIR /tmp
 
 # belabox patched srt
 #
-ARG BELABOX_SRT_VERSION=belabox
+ARG BELABOX_SRT_VERSION=belabox-dev
 RUN mkdir -p /build; \
     git clone https://github.com/IRLServer/srt.git /build/srt; \
     cd /build/srt; \
