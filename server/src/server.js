@@ -69,7 +69,7 @@ app.get("/stats", async (req, res) => {
   const { streamer, key } = query;
   const auth = authConfig.get(streamer);
   const authed = auth === key && streamer && key;
-  let result = [];
+  let result = {};
   if (authed) {
     try {
       const publisherName = `live/stream/${streamer}?srtauth=${auth}`;
@@ -80,14 +80,14 @@ app.get("/stats", async (req, res) => {
         )}`
       );
       const json = await data.json();
-      result = json?.publishers;
+      if (json?.publishers) result = json?.publishers;
     } catch (e) {
       console.log(e);
     }
-   return res.status(200).json({
-     publishers: result,
-     status: "ok"
-   });
+    return res.status(200).json({
+      publishers: result ?? {},
+      status: "ok",
+    });
   }
   return res.status(200).json({
     status: "error",
