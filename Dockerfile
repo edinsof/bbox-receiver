@@ -18,7 +18,7 @@ RUN mkdir -p /build; \
 
 # belabox patched srtla
 #
-ARG SRTLA_VERSION=main
+ARG SRTLA_VERSION=next
 RUN mkdir -p /build; \
     git clone https://github.com/IRLServer/srtla.git /build/srtla; \
     cd /build/srtla; \
